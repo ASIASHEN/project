@@ -41,3 +41,19 @@
 
 </tr>
 
+---
+
+___
+
+***
+
+`hello world`
+
+```c++
+//我是注释
+int main()
+  {
+  cout<<"hello world!"<<endl;
+}
+```
+
