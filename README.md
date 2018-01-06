@@ -18,5 +18,3 @@
 
 
 
-
- ![2%KNCTA7_4XT(DTVQO)S4M0](image\2%KNCTA7_4XT(DTVQO)S4M0.png)
