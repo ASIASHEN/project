@@ -1,3 +1,7 @@
+[TOC]
+
+
+
 # C指针
 
 > 每个变量都有一个内存位置，没一个内存位置都定义了可使用连字号（&）运算符访问的地址，它表示了在内存中的一个地址。
@@ -66,3 +70,461 @@ if(ptr)     /* 如果 p 非空，则完成 */
 if(!ptr)    /* 如果 p 为空，则完成 */
 ```
 
+# C指针的算数运算
+
+C 指针是一个用数值表示的地址。因此，您可以对指针执行算术运算。可以对指针进行四种算术运算：++、--、+、-。
+
+假设 **ptr** 是一个指向地址 1000 的整型指针，是一个 32 位的整数，让我们对该指针执行下列的算术运算：
+
+```
+ptr++
+```
+
+在执行完上述的运算之后，**ptr** 将指向位置 1004，因为 ptr 每增加一次，它都将指向下一个整数位置，即当前位置往后移 4 个字节。这个运算会在不影响内存位置中实际值的情况下，移动指针到下一个内存位置。如果 **ptr** 指向一个地址为 1000 的字符，上面的运算会导致指针指向位置 1001，因为下一个字符位置是在 1001。
+
+## 递增一个指针
+
+我们喜欢在程序中使用指针代替数组，因为变量指针可以递增，而数组不能递增，因为数组是一个常量指针。下面的程序递增变量指针，以便顺序访问数组中的每一个元素：
+
+```c
+#include <stdio.h>
+
+const int MAX = 3;
+
+int main ()
+{
+   int  var[] = {10, 100, 200};
+   int  i, *ptr;
+
+   /* 指针中的数组地址 */
+   ptr = var;
+   for ( i = 0; i < MAX; i++)
+   {
+
+      printf("存储地址：var[%d] = %x\n", i, ptr );
+      printf("存储值：var[%d] = %d\n", i, *ptr );
+
+      /* 移动到下一个位置 */
+      ptr++;
+   }
+   return 0;
+}
+```
+
+当上面的代码被编译和执行时，它会产生下列结果：
+
+```c
+存储地址：var[0] = bf882b30
+存储值：var[0] = 10
+存储地址：of var[1] = bf882b34
+存储值： var[1] = 100
+存储地址：of var[2] = bf882b38
+存储值：var[2] = 200
+```
+
+## 递减一个指针
+
+同样地，对指针进行递减运算，即把值减去其数据类型的字节数，如下所示：
+
+```
+#include <stdio.h>
+
+const int MAX = 3;
+
+int main ()
+{
+   int  var[] = {10, 100, 200};
+   int  i, *ptr;
+
+   /* 指针中最后一个元素的地址 */
+   ptr = &var[MAX-1];
+   for ( i = MAX; i > 0; i--)
+   {
+
+      printf("存储地址：var[%d] = %x\n", i-1, ptr );
+      printf("存储值：var[%d] = %d\n", i-1, *ptr );
+
+      /* 移动到下一个位置 */
+      ptr--;
+   }
+   return 0;
+}
+```
+
+当上面的代码被编译和执行时，它会产生下列结果：
+
+```
+存储地址：var[2] = 518a0ae4
+存储值：var[2] = 200
+存储地址：var[1] = 518a0ae0
+存储值：var[1] = 100
+存储地址：var[0] = 518a0adc
+存储值：var[0] = 10
+```
+
+## 指针的比较
+
+指针可以用关系运算符进行比较，如 ==、< 和 >。如果 p1 和 p2 指向两个相关的变量，比如同一个数组中的不同元素，则可对 p1 和 p2 进行大小比较。
+
+下面的程序修改了上面的实例，只要变量指针所指向的地址小于或等于数组的最后一个元素的地址 &var[MAX - 1]，则把变量指针进行递增：
+
+```c
+#include <stdio.h>
+
+const int MAX = 3;
+
+int main ()
+{
+   int  var[] = {10, 100, 200};
+   int  i, *ptr;
+
+   /* 指针中第一个元素的地址 */
+   ptr = var;
+   i = 0;
+   while ( ptr <= &var[MAX - 1] )
+   {
+
+      printf("Address of var[%d] = %x\n", i, ptr );
+      printf("Value of var[%d] = %d\n", i, *ptr );
+
+      /* 指向上一个位置 */
+      ptr++;
+      i++;
+   }
+   return 0;
+}
+```
+
+当上面的代码被编译和执行时，它会产生下列结果：
+
+```c
+Address of var[0] = bfdbcb20
+Value of var[0] = 10
+Address of var[1] = bfdbcb24
+Value of var[1] = 100
+Address of var[2] = bfdbcb28
+Value of var[2] = 200
+```
+
+---
+
+# C指针数组
+
+```c
+#include <stdio.h>
+ 
+const int MAX = 3;
+ 
+int main ()
+{
+   int  var[] = {10, 100, 200};
+   int i;
+ 
+   for (i = 0; i < MAX; i++)
+   {
+      printf("Value of var[%d] = %d\n", i, var[i] );
+   }
+   return 0;
+}
+```
+
+当上面的代码被编译和执行时，它会产生下列结果：
+
+```
+Value of var[0] = 10
+Value of var[1] = 100
+Value of var[2] = 200
+```
+
+可能有一种情况，我们想要让数组存储指向 int 或 char 或其他数据类型的指针。下面是一个指向整数的指针数组的声明：
+
+```
+int *ptr[MAX];
+```
+
+在这里，把 **ptr** 声明为一个数组，由 MAX 个整数指针组成。因此，ptr 中的每个元素，都是一个指向 int 值的指针。下面的实例用到了三个整数，它们将存储在一个指针数组中，如下所示：
+
+```
+#include <stdio.h>
+ 
+const int MAX = 3;
+ 
+int main ()
+{
+   int  var[] = {10, 100, 200};
+   int i, *ptr[MAX];
+ 
+   for ( i = 0; i < MAX; i++)
+   {
+      ptr[i] = &var[i]; /* 赋值为整数的地址 */
+   }
+   for ( i = 0; i < MAX; i++)
+   {
+      printf("Value of var[%d] = %d\n", i, *ptr[i] );
+   }
+   return 0;
+}
+```
+
+当上面的代码被编译和执行时，它会产生下列结果：
+
+```
+Value of var[0] = 10
+Value of var[1] = 100
+Value of var[2] = 200
+```
+
+您也可以用一个指向字符的指针数组来存储一个字符串列表，如下：
+
+```c
+#include <stdio.h>
+ 
+const int MAX = 4;
+ 
+int main ()
+{
+   char *names[] = {
+                   "Zara Ali",
+                   "Hina Ali",
+                   "Nuha Ali",
+                   "Sara Ali",
+   };
+   int i = 0;
+ 
+   for ( i = 0; i < MAX; i++)
+   {
+      printf("Value of names[%d] = %s\n", i, names[i] );
+   }
+   return 0;
+}
+```
+
+当上面的代码被编译和执行时，它会产生下列结果：
+
+```c
+Value of names[0] = Zara Ali
+Value of names[1] = Hina Ali
+Value of names[2] = Nuha Ali
+Value of names[3] = Sara Ali
+```
+
+# C指向指针的指针
+
+指向指针的指针是一种多级间接寻址的形式，或者说是一个指针链。通常，一个指针包含一个变量的地址。当我们定义一个指向指针的指针时，第一个指针包含了第二个指针的地址，第二个指针指向包含实际值的位置。
+
+
+
+![C 中指向指针的指针](http://www.runoob.com/wp-content/uploads/2014/09/pointer_to_pointer.jpg)
+
+
+
+一个指向指针的指针变量必须如下声明，即在变量名前放置两个星号。例如，下面声明了一个指向 int 类型指针的指针：
+
+```
+int **var;
+```
+
+当一个目标值被一个指针间接指向到另一个指针时，访问这个值需要使用两个星号运算符，如下面实例所示：
+
+```
+#include <stdio.h>
+ 
+int main ()
+{
+   int  var;
+   int  *ptr;
+   int  **pptr;
+
+   var = 3000;
+
+   /* 获取 var 的地址 */
+   ptr = &var;
+
+   /* 使用运算符 & 获取 ptr 的地址 */
+   pptr = &ptr;
+
+   /* 使用 pptr 获取值 */
+   printf("Value of var = %d\n", var );
+   printf("Value available at *ptr = %d\n", *ptr );
+   printf("Value available at **pptr = %d\n", **pptr);
+
+   return 0;
+}
+```
+
+当上面的代码被编译和执行时，它会产生下列结果：
+
+```
+Value of var = 3000
+Value available at *ptr = 3000
+Value available at **pptr = 3000
+```
+
+---
+
+# C传递指针给函数
+
+C 语言允许您传递指针给函数，只需要简单地声明函数参数为指针类型即可。
+
+下面的实例中，我们传递一个无符号的 long 型指针给函数，并在函数内改变这个值：
+
+```
+#include <stdio.h>
+#include <time.h>
+ 
+void getSeconds(unsigned long *par);
+
+int main ()
+{
+   unsigned long sec;
+
+
+   getSeconds( &sec );
+
+   /* 输出实际值 */
+   printf("Number of seconds: %ld\n", sec );
+
+   return 0;
+}
+
+void getSeconds(unsigned long *par)
+{
+   /* 获取当前的秒数 */
+   *par = time( NULL );
+   return;
+}
+```
+
+当上面的代码被编译和执行时，它会产生下列结果：
+
+```
+Number of seconds :1294450468
+```
+
+能接受指针作为参数的函数，也能接受数组作为参数，如下所示：
+
+```c
+#include <stdio.h>
+ 
+/* 函数声明 */
+double getAverage(int *arr, int size);
+ 
+int main ()
+{
+   /* 带有 5 个元素的整型数组  */
+   int balance[5] = {1000, 2, 3, 17, 50};
+   double avg;
+ 
+   /* 传递一个指向数组的指针作为参数 */
+   avg = getAverage( balance, 5 ) ;
+ 
+   /* 输出返回值  */
+   printf("Average value is: %f\n", avg );
+    
+   return 0;
+}
+
+double getAverage(int *arr, int size)
+{
+  int    i, sum = 0;       
+  double avg;          
+ 
+  for (i = 0; i < size; ++i)
+  {
+    sum += arr[i];
+  }
+ 
+  avg = (double)sum / size;
+ 
+  return avg;
+}
+```
+
+当上面的代码被编译和执行时，它会产生下列结果：
+
+```c
+Average value is: 214.40000
+```
+
+---
+
+# C从函数返回指针
+
+在上一章中，我们已经了解了 C 语言中如何从函数返回数组，类似地，C 允许您从函数返回指针。为了做到这点，您必须声明一个返回指针的函数，如下所示：
+
+```
+int * myFunction()
+{
+.
+.
+.
+}
+```
+
+另外，C 不支持在函数外返回局部变量的地址，除非定义局部变量为 **static** 变量。
+
+现在，让我们来看下面的函数，它会生成 10 个随机数，并使用表示指针的数组名（即第一个数组元素的地址）来返回它们，具体如下：
+
+```c
+#include <stdio.h>
+#include <time.h>
+#include <stdlib.h> 
+
+/* 要生成和返回随机数的函数 */
+int * getRandom( )
+{
+   static int  r[10];
+   int i;
+ 
+   /* 设置种子 */
+   srand( (unsigned)time( NULL ) );
+   for ( i = 0; i < 10; ++i)
+   {
+      r[i] = rand();
+      printf("%d\n", r[i] );
+   }
+ 
+   return r;
+}
+ 
+/* 要调用上面定义函数的主函数 */
+int main ()
+{
+   /* 一个指向整数的指针 */
+   int *p;
+   int i;
+
+   p = getRandom();
+   for ( i = 0; i < 10; i++ )
+   {
+       printf("*(p + [%d]) : %d\n", i, *(p + i) );
+   }
+ 
+   return 0;
+}
+```
+
+当上面的代码被编译和执行时，它会产生下列结果：
+
+```c
+1523198053
+1187214107
+1108300978
+430494959
+1421301276
+930971084
+123250484
+106932140
+1604461820
+149169022
+*(p + [0]) : 1523198053
+*(p + [1]) : 1187214107
+*(p + [2]) : 1108300978
+*(p + [3]) : 430494959
+*(p + [4]) : 1421301276
+*(p + [5]) : 930971084
+*(p + [6]) : 123250484
+*(p + [7]) : 106932140
+*(p + [8]) : 1604461820
+*(p + [9]) : 149169022
+```
