@@ -196,3 +196,67 @@ int addSum(int n)
 
 ```
 
+---
+
+```c
+//输出指定数量的斐波那契数列
+
+#include<stdio.h>
+int main()
+{
+//定义输出个数，并输入
+	int n;
+	int t1=0,t2=1,next;
+	int i;
+	printf("n = ");
+	scanf("%d",&n);
+
+//因为要逐个输出，循环
+	for(i=0;i<n;i++)
+	{
+//定义t1，t2，next
+		printf("%d ",t1);
+
+//next=t1+t2-----第一个+第二个
+		next=t1+t2;
+
+//原来的第二个   变第一个
+		t1=t2;
+
+//下一个                 变第二个
+		t2=next;
+	}
+	printf("\n");
+}
+
+```
+
+---
+
+```c
+//指定数字前的斐波那契数列
+
+#include<stdio.h>
+int main()
+
+{
+	int t1=0,t2=1,next;
+	
+	int n;
+	printf("n = ");
+	scanf("%d",&n);
+
+	next=t1+t2;
+
+//	while(next<=n)
+	while(t1<=n)//判断是输出的值小于n
+	{
+		printf("%d ",t1);
+		t1=t2;
+		t2=next;
+		next=t1+t2;
+	}
+	printf("\n");
+
+}
+```
